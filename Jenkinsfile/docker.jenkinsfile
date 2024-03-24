@@ -21,7 +21,7 @@ pipeline {
                         '''
                     }
                     docker.withRegistry('https://registry.hub.docker.com', 'dockerhub'){
-                        def customImage = docker.build('${USER}/reactjs-img:1.2')
+                        def customImage = docker.build(''"${USER}"'/reactjs-img:1.2')
                         customImage.push()
 
                     }
