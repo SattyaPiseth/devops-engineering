@@ -15,12 +15,26 @@ pipeline {
                     docker.image('node:18.9.1').inside(){
                         sh '''
                         node -v
+                        pwd
+                        npm install --force
+                        npm run build
                         '''
-                                                // pwd
-                        // npm install --force
-                        // npm run build
+                    }
+                    docker.withRegistry('https://registry.hub.docker.com', 'dockerhub'){
+                        def customImage = docker.build('${USER}/reactjs-img:1.2')
+                        customImage.push()
+
                     }
                 }
+            }
+        }
+        stage('Deploy reactjs'){
+            steps{
+                sh"""
+                docker rm -f reactjs-contv2
+                docker run -d -p 3003:80 --name reactjs-contv2 ${USER}/reactjs-img:1.2
+                """
+                
             }
         }
     }
