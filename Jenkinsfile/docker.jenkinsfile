@@ -32,7 +32,7 @@ pipeline {
             steps{
                 sh"""
                 docker rm -f reactjs-contv2
-                docker run -d -p 3003:80 --name reactjs-contv2 ${USER}/reactjs-img:1.2
+                docker run -d -p 3003:80 --name reactjs-contv2 muyleangin/reactjs-img:1.2
                 """
                 
             }
