@@ -44,7 +44,7 @@ pipeline {
     }
             steps {
                 sh '''
-            docker login -u muyleangin -p LeanG080720
+                    docker login -u muyleangin -p LeanG080720
                     docker run -d -p 3003:80 --name reacjt-contv2 muyleangin/reactjs-img:1.2
                     curl ifconfig.me
                 '''
