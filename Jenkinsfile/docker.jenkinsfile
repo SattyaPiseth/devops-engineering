@@ -1,0 +1,27 @@
+pipeline {
+    agent any
+    // tools{
+    //     nodejs 'node-18.9.1'
+    // }
+    stages{
+        stage('Get resource from git'){
+            steps{
+                git 'https://github.com/MuyleangIng/react-project.git'
+            }
+        }
+        stage('Build Reactjs with Node'){
+            steps{
+                script{
+                    docker.image('node:18.9.1').inside(){
+                        sh '''
+                        node -v
+                        '''
+                                                // pwd
+                        // npm install --force
+                        // npm run build
+                    }
+                }
+            }
+        }
+    }
+}
