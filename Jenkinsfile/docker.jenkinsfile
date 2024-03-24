@@ -21,7 +21,7 @@ pipeline {
                         '''
                     }
                     docker.withRegistry('https://registry.hub.docker.com', 'dockerhub'){
-                        def customImage = docker.build("muyleangin/reactjs-img:1.2")
+                        def customImage = docker.build("muyleangin/reactjs-img:1.3")
                         customImage.push()
 
                     }
@@ -31,11 +31,17 @@ pipeline {
         stage('Deploy reactjs'){
             steps{
                 sh"""
-                docker rm -f reactjs-contv2
-                docker run -d -p 3003:80 --name reactjs-contv2 muyleangin/reactjs-img:1.2
+                docker rm -f reacjt-contv2
+                docker run -d -p 3003:80 --name reactjs-contv2 muyleangin/reactjs-img:1.3
                 """
                 
             }
         }
+        post {
+            always {
+                clean ws
+            }
+        }
     }
+
 }
