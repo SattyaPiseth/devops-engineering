@@ -41,3 +41,5 @@ To apply any changes made to GitLab's configuration, such as after updating the 
 
 ```bash
 sudo gitlab-ctl reconfigure
+
+
