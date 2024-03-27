@@ -17,4 +17,3 @@ networks:
     external: true 
 volumes: 
   data: # this volume is used by portainer to store it
-
