@@ -4,7 +4,7 @@ pipeline {
     stages {
         stage('Git clone') {
             steps {
-                git url:'https://github.com/MuyleangIng/devops-engerring.git'
+                git branch: 'master', url: 'https://github.com/MuyleangIng/devops-engerring.git'
             }
         }
         stage('Install Ansible') {
