@@ -7,10 +7,17 @@ pipeline {
                 cleanWs()
             }
         }
-        stage('Check ansible version') {
+        stage('git clone'){
+            steps {
+                git branch: 'main' ,url:'https://github.com/MuyleangIng/devops-engerring.git'
+            }
+        }
+        stage('Check ansible vers') {
             steps {
                 script {
-                    sh 'ansible --version'
+                    sh '''ansible --version
+
+                    '''
                     
                 }
             }
