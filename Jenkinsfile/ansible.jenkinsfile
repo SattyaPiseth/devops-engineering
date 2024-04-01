@@ -18,7 +18,7 @@ pipeline {
                     sh 'ansible --version'
                     sh """
                     ansible -i ansible/inventory all -m ping
-                    ansible-playbook -i ansible/inventory workers ansible/create-folder.yml
+                    ansible-playbook -i ansible/inventory ansible/create-folder.yml
                     """
                 }
             }
