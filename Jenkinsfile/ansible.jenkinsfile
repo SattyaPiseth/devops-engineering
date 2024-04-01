@@ -17,9 +17,6 @@ pipeline {
                 sh'''
                 ls -lrt
                 pwd
-                ls  devops-engerring
-                cd ansible 
-                pwd
                 '''
             }
         }
@@ -28,8 +25,7 @@ pipeline {
                 script {
                     sh '''ansible --version
                     ansible -i ansible/hosts workers -m ping
-                    '''
-                    
+                    '''    
                 }
             }
         }
