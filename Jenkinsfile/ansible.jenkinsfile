@@ -1,0 +1,21 @@
+pipeline {
+    agent any
+
+    stages {
+        stage('Git clone') {
+            steps {
+                git 'https://github.com/MuyleangIng/devops-engerring.git'
+            }
+        }
+        stage('Install Ansible') {
+            steps {
+                script {
+                    sh 'ansible --version'
+                    sh """
+                    ansible -i ansible/inventory all -m ping
+                    """
+                }
+            }
+        }
+    }
+}
