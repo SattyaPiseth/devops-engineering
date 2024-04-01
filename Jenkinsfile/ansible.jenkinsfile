@@ -12,6 +12,17 @@ pipeline {
                 git branch: 'main' ,url:'https://github.com/MuyleangIng/devops-engerring.git'
             }
         }
+        stage('check location pwd'){
+            steps{
+                sh'''
+                ls -lrt
+                pwd
+                ls  devops-engerring
+                cd ansible 
+                pwd
+                '''
+            }
+        }
         stage('Check ansible vers') {
             steps {
                 script {
