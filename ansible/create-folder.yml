@@ -8,9 +8,12 @@
         path: /root/shellscript
         state: directory
         mode: 0755
+    - name: pwd folder shellscript
+      command: pwd
+          
     - name: Copy the shellscript to the remote server
       copy:
-        src: shellscript/createfolder.sh  # Adjust this path according to the actual location
+        src: ~/shellscript/createfolder.sh  # Adjust this path according to the actual location
         dest: /root/shellscript/
         mode: '0755'
 
