@@ -26,5 +26,5 @@
     #   command: /bin/bash /root/shellscript/createfolder.sh  
     #   args:
     #     creates: /root/shellscript/createfolder.sh
-    # - name: Execute the shellscript 
-    #   command: /bin/bash /root/shellscript/createfolder.sh
+    - name: Execute the shellscript 
+      command: /bin/bash /root/shellscript/createfolder.sh
