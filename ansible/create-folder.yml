@@ -8,12 +8,10 @@
         path: /root/folder1
         state: directory
         mode: 0755
-    - name: copy file to remote server
-      command: cp -r ~/var/jenkins_home/workspace/ansible/ansible-jenkins-intergraion/shellscript/* /root/folder1/    
-    # - name: Copy the shellscript to the remote server
-    #   copy:
-    #     src: ../shellscript/createfolder.sh
-    #     dest: /root/shellscript/
-    #     mode: '0755'
+    - name: Copy the shellscript to the remote server
+      copy:
+        src: ../shellscript/*
+        dest: /root/folder1/
+        mode: '0755'
     # - name: Execute the shellscript 
     #   command: /bin/bash /root/shellscript/createfolder.sh
