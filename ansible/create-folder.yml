@@ -15,4 +15,3 @@
         mode: '0755'
     - name: Execute the shellscript
       command: bash /root/folder1/createfolder.sh    
-    
