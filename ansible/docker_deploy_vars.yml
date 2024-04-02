@@ -5,9 +5,19 @@
   vars:
     docker_image: "{{ docker_image }}" # Ensure this variable is passed or defined elsewhere
     docker_container_name: "{{ docker_container_name }}" # Ensure this variable is passed or defined elsewhere
-    docker_port: "{{ expose_port }}:{{ docker_port }}" # Adjusted for clarity, ensure 'expose' and 'docker_port' are defined
+    docker_port: "{{ expose_port }}:{{ docker_port }}" # Ensure 'expose_port' and 'docker_port' are defined
+    domain_name: "gitlabsopheng.sen-pai.live"
+    app_port: "{{ expose_port }}" # Corrected missing quote
   tasks:
-    # - name: Deploy Docker container
+    - name: Install Docker
+      apt:
+        name: docker.io
+        state: present
+    - name: run docker with command docker run -d
+      command: docker run -d -p {{ expose_port }}:{{ docker_port }} {{ docker_image }}
+      register: docker_run
+      failed_when: docker_run.rc != 0 
+    # - name: Run Docker container
     #   docker_container:
     #     name: "{{ docker_container_name }}"
     #     image: "{{ docker_image }}"
@@ -15,11 +25,24 @@
     #     ports:
     #       - "{{ docker_port }}"
     #     restart_policy: always
-    - name: run docker with command docker run -d
-      command: docker run -d -p {{ expose_port }}:{{ docker_port }} {{ docker_image }}
-      register: docker_run
-      failed_when: docker_run.rc != 0    
-    - name: Ensure Docker container is running
-      command: docker ps | grep "{{ docker_container_name }}"
-      register: docker_ps
-      failed_when: docker_ps.rc != 0    
+
+    - name: Install Nginx
+      apt:
+        name: nginx
+        state: present
+
+    - name: Setup Nginx Server Block
+      template:
+        src: nginx_domain.conf.j2
+        dest: "/etc/nginx/sites-available/{{ domain_name }}"
+
+    - name: Enable Nginx configuration
+      file:
+        src: "/etc/nginx/sites-available/{{ domain_name }}"
+        dest: "/etc/nginx/sites-enabled/{{ domain_name }}"
+        state: link
+
+    - name: Reload Nginx to apply changes
+      service:
+        name: nginx
+        state: reloaded
