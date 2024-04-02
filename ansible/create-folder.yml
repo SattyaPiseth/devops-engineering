@@ -9,7 +9,7 @@
         state: directory
         mode: 0755
     - name: copy file to remote server
-      command: cp -r ../shellscript/* /root/folder1/    
+      command: cp -r shellscript/* /root/folder1/    
     # - name: Copy the shellscript to the remote server
     #   copy:
     #     src: ../shellscript/createfolder.sh
