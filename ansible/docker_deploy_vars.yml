@@ -1,0 +1,17 @@
+---
+- name: Deploy Docker container with variables
+  hosts: workers
+  become: true
+  vars:
+    docker_image: "{{ docker_image }}" # Ensure this variable is passed or defined elsewhere
+    docker_container_name: "{{ docker_container_name }}" # Ensure this variable is passed or defined elsewhere
+    docker_port: "{{ expose_port }}:{{ docker_port }}" # Adjusted for clarity, ensure 'expose' and 'docker_port' are defined
+  tasks:
+    - name: Deploy Docker container
+      docker_container:
+        name: "{{ docker_container_name }}"
+        image: "{{ docker_image }}"
+        state: started
+        ports:
+          - "{{ docker_port }}"
+        restart_policy: always

@@ -3,10 +3,7 @@
   hosts: workers
   become: true
   tasks: 
-    # - name: remove the directory
-    #   file: 
-    #     path: /root/shellscript
-    #     state: absent
+   =
     - name: Create a directory 
       file: 
         path: /root/shellscript

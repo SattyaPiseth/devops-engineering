@@ -29,5 +29,17 @@ pipeline {
                 }
             }
         }
+        stage('Run ansible playbook with variables') {
+            steps {
+                script {
+                    sh 'ansible-playbook -i ansible/hosts ansible/docker_deploy_var.yml \
+                    -e "docker_image=muyleangin/reactjs:latest" \
+                    -e "docker_container_name=reactjs" \
+                    -e "expose_port=3233" \
+                    -e "docker_port=3000" \
+                    '
+                }
+            }
+        }
     }
 }
