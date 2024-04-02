@@ -29,17 +29,26 @@ pipeline {
                 }
             }
         }
-        stage('Run ansible playbook with variables') {
+        stage('ansible create folder') {
             steps {
                 script {
-                    sh 'ansible-playbook -i ansible/hosts ansible/docker_deploy_vars.yml \
-                    -e "docker_image=muyleangin/reactjs:latest" \
-                    -e "docker_container_name=reactjs" \
-                    -e "expose_port=3233" \
-                    -e "docker_port=80" \
-                    '
+                    sh '''
+                    ansible-playbook -i ansible/hosts ansible/create-folder.yml
+                    '''    
                 }
             }
         }
+        // stage('Run ansible playbook with variables') {
+        //     steps {
+        //         script {
+        //             sh 'ansible-playbook -i ansible/hosts ansible/docker_deploy_vars.yml \
+        //             -e "docker_image=muyleangin/reactjs:latest" \
+        //             -e "docker_container_name=reactjs" \
+        //             -e "expose_port=3233" \
+        //             -e "docker_port=80" \
+        //             '
+        //         }
+        //     }
+        // }
     }
 }
