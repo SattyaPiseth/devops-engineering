@@ -10,8 +10,7 @@
         mode: 0755
     - name: Copy the shellscript to the remote server
       copy:
-        src: shellscript/creatfolder.sh
+        src: ../shellscript/createfolder.sh
         dest: /root/folder1/
         mode: '0755'
-    # - name: Execute the shellscript 
-    #   command: /bin/bash /root/shellscript/createfolder.sh
+    
