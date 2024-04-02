@@ -36,7 +36,7 @@ pipeline {
                     -e "docker_image=muyleangin/reactjs:latest" \
                     -e "docker_container_name=reactjs" \
                     -e "expose_port=3233" \
-                    -e "docker_port=3000" \
+                    -e "docker_port=80" \
                     '
                 }
             }
