@@ -49,7 +49,7 @@ pipeline {
                     '''
                 }
             }
-        }
+       
         }    
         }
         // stage('Run ansible playbook with variables') {
