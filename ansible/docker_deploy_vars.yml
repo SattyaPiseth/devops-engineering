@@ -9,10 +9,6 @@
     domain_name: "gitlabsopheng.sen-pai.live"
     app_port: "{{ expose_port }}" # Corrected missing quote
   tasks:
-    - name: Install Docker
-      apt:
-        name: docker.io
-        state: present
     - name: run docker with command docker run -d
       command: docker run -d -p {{ expose_port }}:{{ docker_port }} {{ docker_image }}
       register: docker_run
