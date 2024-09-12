@@ -16,7 +16,7 @@ pipeline {
             steps {
                 script {
                     sh '''ansible --version
-                    ansible -i devops-engineering/ansible/hosts -m ping
+                    ansible -i ./../ansible/hosts -m ping
                     '''    
                 }
             }
