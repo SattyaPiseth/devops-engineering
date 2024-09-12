@@ -12,10 +12,11 @@ pipeline {
                 git branch: 'main', url: 'https://github.com/SattyaPiseth/devops-engineering.git'
             }
         }
-        stage('Check ansible version') {
+         stage('Check ansible vers') {
             steps {
                 script {
                     sh '''ansible --version
+                    ansible -i ansible/hosts workers -m ping
                     '''    
                 }
             }
