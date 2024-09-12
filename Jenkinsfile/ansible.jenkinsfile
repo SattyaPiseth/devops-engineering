@@ -16,6 +16,7 @@ pipeline {
             steps {
                 script {
                     sh '''ansible --version
+                    ansible -i ansible/hosts workers -m ping
                     '''    
                 }
             }
