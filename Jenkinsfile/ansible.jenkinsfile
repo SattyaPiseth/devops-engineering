@@ -25,7 +25,7 @@ pipeline {
             steps {
                 script {
                     sh '''
-                    ansible-playbook -i ansible/hosts.ini ansible/create-folder.yml
+                    ansible-playbook -i ansible/hosts.ini ansible/create-folder.yml --ask-become-pass
                     '''
                 }
             }
