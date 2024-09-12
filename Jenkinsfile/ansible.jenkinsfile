@@ -16,7 +16,7 @@ pipeline {
             steps {
                 script {
                     sh '''ansible --version
-                    ansible -i /var/jenkins_home/workspace/ansible/test-ansible/ansible/hosts workers -m ping
+                    ansible -i ./ansible/hosts.ini workers -m ping
                     '''
                 }
             }
