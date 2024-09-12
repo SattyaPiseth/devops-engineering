@@ -21,5 +21,14 @@ pipeline {
                 }
             }
         }
+        stage('ansible create folder') {
+            steps {
+                script {
+                    sh '''
+                    ansible-playbook -i ansible/hosts.ini ansible/create-folder.yml
+                    '''
+                }
+            }
+        }
     }
 }
