@@ -7,11 +7,15 @@ pipeline {
                 cleanWs()
             }
         }
+        stage('Git Clone') {
+            steps {
+                git branch: 'main', url: 'https://github.com/SattyaPiseth/devops-engineering.git'
+            }
+        }
         stage('Check ansible version') {
             steps {
                 script {
                     sh '''ansible --version
-                    ansible -i ansible/hosts workers -m ping
                     '''    
                 }
             }
