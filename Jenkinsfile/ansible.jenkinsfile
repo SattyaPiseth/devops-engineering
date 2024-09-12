@@ -17,7 +17,7 @@ pipeline {
                 script {
                     sh '''ansible --version
                     '''    
-                    sh "ansible -i ansible/hosts.ini workers -m ping"
+                    sh "ansible -i /home/sattya/devops-engineering/ansible/hosts.ini workers -m ping"
                 }
             }
         }
