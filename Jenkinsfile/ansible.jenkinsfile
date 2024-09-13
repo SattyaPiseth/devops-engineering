@@ -5,10 +5,10 @@ pipeline {
         EXTERNAL_PORT = '3233'
         INTERNAL_PORT = '80'
         DOCKER_IMAGE = 'muyleangin/reactjs:latest'
-        CONTAINER_NAME = 'my_container'
+        CONTAINER_NAME = 'jina-ui'
         ANSIBLE_PLAYBOOK = 'ansible/deploy.yml'
         ANSIBLE_HOSTS = 'ansible/hosts.ini'
-        DOMAIN_NAME = 'react-vite.techinsights.guru'
+        DOMAIN_NAME = 'jina.techinsights.guru'
     }
 
     stages {
