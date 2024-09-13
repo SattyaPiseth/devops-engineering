@@ -2,13 +2,13 @@ pipeline {
     agent any
       environment {
           // Define environment variables
-        EXTERNAL_PORT = '8888'
+        EXTERNAL_PORT = '8085'
         INTERNAL_PORT = '80'
-        DOCKER_IMAGE = 'muyleangin/reactjs:latest'
-        CONTAINER_NAME = 'jina-ui'
+        DOCKER_IMAGE = 'pisethsattya/jobquick-jenkins:1.0'
+        CONTAINER_NAME = 'jobfinder'
         ANSIBLE_PLAYBOOK = 'ansible/deploy.yml'
         ANSIBLE_HOSTS = 'ansible/hosts.ini'
-        DOMAIN_NAME = 'jinja.techinsights.guru'
+        DOMAIN_NAME = 'ansible.techinsights.guru'
     }
 
     stages {
