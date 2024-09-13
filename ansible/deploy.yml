@@ -1,16 +1,30 @@
 ---
-- name: Execute the shellscript 
+- name: Deploy Docker container
   hosts: workers
   become: true
   vars:
-    external_port: "{{ external_port}}"
-    internal_port: "{{ internal_port}}"
+    external_port: "{{ external_port }}"
+    internal_port: "{{ internal_port }}"
     docker_image: "{{ docker_image }}"
-    domain_name: "{{ domain_name }}"
-    app_port: "{{ external_port}}"
+    container_name: "{{ container_name | default('my_container') }}"  # Define a container name for easier management
   tasks:
-    - name: Deploy with docker 
-      command: docker run -d -p "{{ external_port}}":"{{ internal_port}}" "{{ docker_image }}"
+    - name: Check if a container with the same port is already running
+      command: docker ps -q --filter "publish={{ external_port }}"
+      register: existing_container
+      changed_when: false
+
+    - name: Stop and remove existing container if it exists
+      when: existing_container.stdout != ""
+      block:
+        - name: Stop the existing container
+          command: docker stop "{{ existing_container.stdout }}"
+          
+        - name: Remove the existing container
+          command: docker rm "{{ existing_container.stdout }}"
+
+    - name: Deploy new container
+      command: docker run -d --name "{{ container_name }}" -p "{{ external_port }}:{{ internal_port }}" "{{ docker_image }}"
+
     # - name: Install Nginx
     #   apt:
     #     name: nginx
