@@ -79,17 +79,17 @@
         - /var/log/letsencrypt
       become: true
 
-    - name: Obtain SSL certificate with Certbot
-      command: >
-        certbot --nginx -d {{ domain_name }} --non-interactive --agree-tos
-        -m {{ email }} --redirect
-      args:
-        creates: "{{ ssl_cert_path }}"
-      notify:
-        - Reload Nginx
+  #   - name: Obtain SSL certificate with Certbot
+  #     command: >
+  #       certbot --nginx -d {{ domain_name }} --non-interactive --agree-tos
+  #       -m {{ email }} --redirect
+  #     args:
+  #       creates: "{{ ssl_cert_path }}"
+  #     notify:
+  #       - Reload Nginx
 
-  handlers:
-    - name: Reload Nginx
-      service:
-        name: nginx
-        state: reloaded
+  # handlers:
+  #   - name: Reload Nginx
+  #     service:
+  #       name: nginx
+  #       state: reloaded
