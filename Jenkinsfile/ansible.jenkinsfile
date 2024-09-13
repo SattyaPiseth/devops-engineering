@@ -86,6 +86,16 @@ pipeline {
                 }
             }
         }
+
+        stage('Uninstall Docker') {
+            steps {
+                script {
+                    sh """
+                        ansible-playbook -i ${ANSIBLE_HOSTS} ansible/uninstall_docker.yml
+                    """
+                }
+            }
+        }
     
 
 
