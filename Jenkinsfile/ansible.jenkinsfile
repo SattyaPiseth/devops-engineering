@@ -22,15 +22,15 @@ pipeline {
                 git branch: 'main', url: 'https://github.com/SattyaPiseth/devops-engineering.git'
             }
         }
-        stage('check location pwd'){
-            steps{
-                sh'''
-                ls -lrt
-                pwd
-                ls /var/jenkins_home/workspace/ansible/test-ansible/shellscript/*
-                '''
-            }
-        }
+        // stage('check location pwd'){
+        //     steps{
+        //         sh'''
+        //         ls -lrt
+        //         pwd
+        //         ls /var/jenkins_home/workspace/ansible/test-ansible/shellscript/*
+        //         '''
+        //     }
+        // }
         stage('Check ansible vers') {
             steps {
                 script {
@@ -42,27 +42,27 @@ pipeline {
             }
         }
 
-        stage('ansible create folder') {
-            steps {
-                script {
-                    sh '''
-                    ansible-playbook -i ansible/hosts.ini ansible/create-folder.yml
-                    '''
-                }
-            }
-        }
-        stage('Install Docker') {
-            steps {
-                script {
-                    echo 'Running Ansible playbook to ensure Docker is installed...'
-                    sh '''
-                        # Run the Ansible playbook
+        // stage('ansible create folder') {
+        //     steps {
+        //         script {
+        //             sh '''
+        //             ansible-playbook -i ansible/hosts.ini ansible/create-folder.yml
+        //             '''
+        //         }
+        //     }
+        // }
+        // stage('Install Docker') {
+        //     steps {
+        //         script {
+        //             echo 'Running Ansible playbook to ensure Docker is installed...'
+        //             sh '''
+        //                 # Run the Ansible playbook
 
-                        ansible-playbook -i ansible/hosts.ini ansible/install_docker.yml
-                    '''
-                }
-            }
-        }
+        //                 ansible-playbook -i ansible/hosts.ini ansible/install_docker.yml
+        //             '''
+        //         }
+        //     }
+        // }
 
          stage('Deploy with Ansible') {
             steps {

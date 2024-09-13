@@ -9,41 +9,8 @@
     domain_name: "{{ domain_name }}"
     app_port: "{{ external_port }}"
   tasks:
-    - name: Check if a container with the same name is already running
-      command: docker ps -q --filter "name={{ container_name }}"
-      register: existing_container
-      changed_when: false
-
-    - name: Stop the existing container if it is running
-      when: existing_container.stdout != ""
-      command: docker stop "{{ existing_container.stdout }}"
-      ignore_errors: yes
-
-    - name: Remove the existing container if it exists
-      command: docker rm -f "{{ container_name }}"
-      ignore_errors: yes
-
-    - name: Check if the port is already in use
-      command: ss -tuln | grep ":{{ external_port }}"
-      register: port_check
-      changed_when: false
-      ignore_errors: yes
-
-    - name: Fail if the port is already in use
-      fail:
-        msg: "Port {{ external_port }} is already in use. Please free the port before proceeding."
-      when: port_check.stdout != ""
-
-    - name: Deploy with docker
-      command: docker run -d -p "{{ external_port }}:{{ internal_port }}" "{{ docker_image }}"
-      register: docker_deploy
-      ignore_errors: yes
-
-    - name: Check for Docker deployment failure
-      fail:
-        msg: "Docker deployment failed: {{ docker_deploy.stderr }}"
-      when: docker_deploy.failed
-
+    - name: Deploy with docker 
+      command: docker run -d -p "{{ external_port}}":"{{ internal_port}}" "{{ docker_image }}"
     - name: Install Nginx
       apt:
         name: nginx
@@ -64,21 +31,9 @@
       service:
         name: nginx
         state: reloaded
-
     - name: Obtain and Install SSL Certificate with Certbot
-      command: certbot --nginx -d {{ domain_name }} --non-interactive --agree-tos -m pisethsattya33@email.com --redirect
+      command: certbot --nginx -d {{ domain_name }} --non-interactive --agree-tos -m your@email.com --redirect
       args:
         creates: /etc/letsencrypt/live/{{ domain_name }}/fullchain.pem
-      register: certbot_result
-      ignore_errors: yes
-
-    - name: Handle Certbot failure
-      fail:
-        msg: "Certbot failed. Check logs and DNS settings. Rate limit might be in effect."
-      when: certbot_result.failed
-
-    - name: Reload Nginx after SSL certificate installation
-      service:
-        name: nginx
-        state: reloaded
-      when: certbot_result.changed
+      notify:
+        - Reload Nginx
