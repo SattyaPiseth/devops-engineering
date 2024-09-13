@@ -1,13 +1,13 @@
 ---
-- name: Deploy Docker container
+- name: Deploy Docker container and manage Nginx with SSL
   hosts: workers
   become: true
   vars:
     external_port: "{{ external_port }}"
     internal_port: "{{ internal_port }}"
     docker_image: "{{ docker_image }}"
-    container_name: "{{ container_name | default('my_container') }}"  # Define a container name for easier management
-    domain_name: "{{domain_name}}"
+    container_name: "{{ container_name | default('my_container') }}"
+    domain_name: "{{ domain_name }}"
     app_port: "{{ external_port }}"
   tasks:
     - name: Check if a container with the same port is already running
@@ -32,6 +32,13 @@
         name: nginx
         state: present
 
+    - name: Install Certbot and Nginx plugin
+      apt:
+        name:
+          - certbot
+          - python3-certbot-nginx
+        state: present
+
     - name: Setup Nginx Server Block
       template:
         src: nginx_domain.conf.j2
@@ -47,9 +54,16 @@
       service:
         name: nginx
         state: reloaded
+
     - name: Obtain and Install SSL Certificate with Certbot
       command: certbot --nginx -d {{ domain_name }} --non-interactive --agree-tos -m your@email.com --redirect
       args:
         creates: /etc/letsencrypt/live/{{ domain_name }}/fullchain.pem
       notify:
         - Reload Nginx
+
+  handlers:
+    - name: Reload Nginx
+      service:
+        name: nginx
+        state: reloaded
