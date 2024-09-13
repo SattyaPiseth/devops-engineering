@@ -2,7 +2,7 @@ pipeline {
     agent any
       environment {
           // Define environment variables
-        EXTERNAL_PORT = '3233'
+        EXTERNAL_PORT = '8888'
         INTERNAL_PORT = '80'
         DOCKER_IMAGE = 'muyleangin/reactjs:latest'
         CONTAINER_NAME = 'jina-ui'
