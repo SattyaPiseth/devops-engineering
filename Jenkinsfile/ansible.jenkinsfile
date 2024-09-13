@@ -48,7 +48,7 @@ pipeline {
                     sh '''
                         # Run the Ansible playbook
 
-                        ansible-playbook -i ansible/hosts.ini install_docker.yml
+                        ansible-playbook -i ansible/hosts.ini ansible/install_docker.yml
                     '''
                 }
             }
