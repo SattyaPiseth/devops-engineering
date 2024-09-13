@@ -1,6 +1,6 @@
 ---
 - name: Deploy Docker container and manage Nginx with SSL
-  hosts: node2
+  hosts: workers
   become: true
   vars:
     external_port: "{{ external_port }}"
@@ -10,8 +10,8 @@
     domain_name: "{{ domain_name }}"
     app_port: "{{ external_port }}"
   tasks:
-    - name: Check if a container with the same port is already running
-      command: docker ps -q --filter "publish={{ external_port }}"
+    - name: Check if a container with the same name is already running
+      command: docker ps -q --filter "name={{ container_name }}"
       register: existing_container
       changed_when: false
 
@@ -26,6 +26,8 @@
 
     - name: Deploy new container
       command: docker run -d --name "{{ container_name }}" -p "{{ external_port }}:{{ internal_port }}" "{{ docker_image }}"
+      register: deploy_result
+      failed_when: deploy_result.rc != 0
 
     - name: Install Nginx
       apt:
