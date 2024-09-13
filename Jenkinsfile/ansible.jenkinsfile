@@ -8,7 +8,7 @@ pipeline {
         CONTAINER_NAME = 'jina-ui'
         ANSIBLE_PLAYBOOK = 'ansible/deploy.yml'
         ANSIBLE_HOSTS = 'ansible/hosts.ini'
-        DOMAIN_NAME = 'jina.techinsights.guru'
+        DOMAIN_NAME = 'jinja.techinsights.guru'
     }
 
     stages {
