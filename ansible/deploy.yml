@@ -8,9 +8,27 @@
     container_name: "{{ container_name }}"
     domain_name: "{{ domain_name }}"
     app_port: "{{ external_port }}"
+
   tasks:
-    - name: Deploy with docker 
-      command: docker run -d -p "{{ external_port}}":"{{ internal_port}}" "{{ docker_image }}"
+    - name: Check if the container is running
+      command: docker ps -q -f name={{ container_name }}
+      register: container_id
+      changed_when: false
+
+    - name: Stop and remove existing container if it exists
+      docker_container:
+        name: "{{ container_name }}"
+        state: absent
+      when: container_id.stdout != ""
+
+    - name: Deploy with docker
+      docker_container:
+        name: "{{ container_name }}"
+        image: "{{ docker_image }}"
+        state: started
+        published_ports:
+          - "{{ external_port }}:{{ internal_port }}"
+
     - name: Install Nginx
       apt:
         name: nginx
@@ -31,6 +49,7 @@
       service:
         name: nginx
         state: reloaded
+
     - name: Obtain and Install SSL Certificate with Certbot
       command: certbot --nginx -d {{ domain_name }} --non-interactive --agree-tos -m your@email.com --redirect
       args:
