@@ -1,76 +1,55 @@
 ---
-- name: Ensure Docker is installed and configured
+- name: Install Docker on Ubuntu
   hosts: all
   become: yes
   tasks:
-    - name: Check if Docker is installed
-      command: docker --version
-      register: docker_version
-      ignore_errors: yes
+    - name: Update apt package index
+      apt:
+        update_cache: yes
+        cache_valid_time: 3600  # 1 hour
 
-    - name: Install prerequisites for Docker installation
-      when: docker_version.failed
+    - name: Install required packages
       apt:
         name:
           - apt-transport-https
           - ca-certificates
           - curl
-          - gnupg
-          - lsb-release
+          - software-properties-common
         state: present
-        update_cache: yes
 
-    - name: Add Docker’s official GPG key
-      when: docker_version.failed
-      apt_key:
+    - name: Add Docker's official GPG key
+      get_url:
         url: https://download.docker.com/linux/ubuntu/gpg
-        state: present
+        dest: /tmp/docker.gpg
+        mode: '0644'
 
-    - name: Add Docker repository
-      when: docker_version.failed
+    - name: Import Docker GPG key
+      command: gpg --dearmor -o /usr/share/keyrings/docker-archive-keyring.gpg /tmp/docker.gpg
+
+    - name: Set up the Docker repository
       apt_repository:
-        repo: "deb [arch=amd64] https://download.docker.com/linux/ubuntu jammy stable"
+        repo: "deb [arch={{ ansible_architecture }} signed-by=/usr/share/keyrings/docker-archive-keyring.gpg] https://download.docker.com/linux/ubuntu {{ ansible_lsb.codename }} stable"
+        filename: docker
         state: present
 
-    - name: Install Docker Engine
-      when: docker_version.failed
+    - name: Update apt package index again
       apt:
-        name:
-          - docker-ce
-          - docker-ce-cli
-          - containerd.io
+        update_cache: yes
+        cache_valid_time: 3600
+
+    - name: Install Docker CE
+      apt:
+        name: docker-ce
         state: present
 
-    - name: Ensure Docker is started and enabled
-      when: docker_version.failed
-      service:
+    - name: Ensure Docker service is running
+      systemd:
         name: docker
         state: started
         enabled: yes
 
-    - name: Ensure user is added to the Docker group
+    - name: Add user to Docker group
       user:
         name: "{{ ansible_user }}"
         groups: docker
         append: yes
-
-    - name: Ensure Docker socket permissions are correct
-      file:
-        path: /var/run/docker.sock
-        owner: root
-        group: docker
-        mode: '0660'
-        state: file
-
-    - name: Notify user to log out and log back in
-      debug:
-        msg: "Please log out and log back in to apply group membership changes."
-
-    - name: Verify Docker installation
-      command: docker --version
-      register: docker_installed
-      changed_when: false
-
-    - name: Output Docker version
-      debug:
-        msg: "Docker installed: {{ docker_installed.stdout }}"

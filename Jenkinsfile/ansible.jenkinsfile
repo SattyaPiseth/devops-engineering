@@ -63,22 +63,34 @@ pipeline {
         //         }
         //     }
         // }
-
-         stage('Deploy with Ansible') {
+        stage('Uninstall Docker') {
             steps {
                 script {
-                    // Run the Ansible playbook to deploy the Docker container
-                    sh """
-                    ansible-playbook -i ${ANSIBLE_HOSTS} ${ANSIBLE_PLAYBOOK} \
-                    -e "external_port=${EXTERNAL_PORT}" \
-                    -e "internal_port=${INTERNAL_PORT}" \
-                    -e "docker_image=${DOCKER_IMAGE}" \
-                    -e "container_name=${CONTAINER_NAME}" \
-                    -e "domain_name=${DOMAIN_NAME}"
-                    """
+                    echo 'Running Ansible playbook to ensure Docker is installed...'
+                    sh '''
+                        # Run the Ansible playbook
+
+                        ansible-playbook -i ansible/hosts.ini ansible/uninstall_docker.yml
+                    '''
                 }
             }
         }
+
+        //  stage('Deploy with Ansible') {
+        //     steps {
+        //         script {
+        //             // Run the Ansible playbook to deploy the Docker container
+        //             sh """
+        //             ansible-playbook -i ${ANSIBLE_HOSTS} ${ANSIBLE_PLAYBOOK} \
+        //             -e "external_port=${EXTERNAL_PORT}" \
+        //             -e "internal_port=${INTERNAL_PORT}" \
+        //             -e "docker_image=${DOCKER_IMAGE}" \
+        //             -e "container_name=${CONTAINER_NAME}" \
+        //             -e "domain_name=${DOMAIN_NAME}"
+        //             """
+        //         }
+        //     }
+        // }
 
     }
 }
