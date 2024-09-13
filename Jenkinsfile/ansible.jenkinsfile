@@ -51,30 +51,19 @@ pipeline {
         //         }
         //     }
         // }
-        // stage('Install Docker') {
-        //     steps {
-        //         script {
-        //             echo 'Running Ansible playbook to ensure Docker is installed...'
-        //             sh '''
-        //                 # Run the Ansible playbook
-
-        //                 ansible-playbook -i ansible/hosts.ini ansible/install_docker.yml
-        //             '''
-        //         }
-        //     }
-        // }
-        stage('Uninstall Docker') {
+        stage('Install Docker') {
             steps {
                 script {
                     echo 'Running Ansible playbook to ensure Docker is installed...'
                     sh '''
                         # Run the Ansible playbook
 
-                        ansible-playbook -i ansible/hosts.ini ansible/uninstall_docker.yml
+                        ansible-playbook -i ansible/hosts.ini ansible/install_docker.yml
                     '''
                 }
             }
         }
+
 
         //  stage('Deploy with Ansible') {
         //     steps {
