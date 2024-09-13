@@ -41,18 +41,18 @@ pipeline {
                 }
             }
         }
-        // stage('Install Docker') {
-        //     steps {
-        //         script {
-        //             echo 'Running Ansible playbook to ensure Docker is installed...'
-        //             sh '''
-        //                 # Run the Ansible playbook
+        stage('Install Docker') {
+            steps {
+                script {
+                    echo 'Running Ansible playbook to ensure Docker is installed...'
+                    sh '''
+                        # Run the Ansible playbook
 
-        //                 ansible-playbook -i ansible/hosts.ini install_docker.yml
-        //             '''
-        //         }
-        //     }
-        // }
+                        ansible-playbook -i ansible/hosts.ini install_docker.yml
+                    '''
+                }
+            }
+        }
 
         // stage('deploy with docker on remote server'){
         //     steps{
