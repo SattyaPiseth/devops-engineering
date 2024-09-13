@@ -24,21 +24,11 @@
       command: docker rm -f "{{ container_name }}"
       ignore_errors: yes
 
-    - name: Deploy new container
-      command: docker run -d --name "{{ container_name }}" -p "{{ external_port }}:{{ internal_port }}" "{{ docker_image }}"
-      register: deploy_result
-      failed_when: deploy_result.rc != 0
-
+    - name: Deploy with docker 
+      command: docker run -d -p "{{ external_port}}":"{{ internal_port}}" "{{ docker_image }}"
     - name: Install Nginx
       apt:
         name: nginx
-        state: present
-
-    - name: Install Certbot and Nginx plugin
-      apt:
-        name:
-          - certbot
-          - python3-certbot-nginx
         state: present
 
     - name: Setup Nginx Server Block
@@ -56,16 +46,9 @@
       service:
         name: nginx
         state: reloaded
-
     - name: Obtain and Install SSL Certificate with Certbot
-      command: sudo certbot --nginx -d {{ domain_name }} --non-interactive --agree-tos -m your@email.com --redirect
+      command: certbot --nginx -d {{ domain_name }} --non-interactive --agree-tos -m your@email.com --redirect
       args:
         creates: /etc/letsencrypt/live/{{ domain_name }}/fullchain.pem
       notify:
         - Reload Nginx
-
-  # handlers:
-  #   - name: Reload Nginx
-  #     service:
-  #       name: nginx
-  #       state: reloaded
