@@ -32,29 +32,29 @@ pipeline {
             }
         }
 
-        // stage('ansible create folder') {
-        //     steps {
-        //         script {
-        //             sh '''
-        //             ansible-playbook -i ansible/hosts.ini ansible/create-folder.yml
-        //             '''
-        //         }
-        //     }
-        // }
-        // stage('deploy with docker on remote server'){
-        //     steps{
-        //         script{
-        //             sh'''
-        //             ansible-playbook -i ansible/hosts ansible/deploy.yml \
-        //             -e "external_port=3233" \
-        //             -e "internal_port=80" \
-        //             -e "docker_image=muyleangin/reactjs:latest" \
+        stage('ansible create folder') {
+            steps {
+                script {
+                    sh '''
+                    ansible-playbook -i ansible/hosts.ini ansible/create-folder.yml
+                    '''
+                }
+            }
+        }
+        stage('deploy with docker on remote server'){
+            steps{
+                script{
+                    sh'''
+                    ansible-playbook -i ansible/hosts ansible/deploy.yml \
+                    -e "external_port=3233" \
+                    -e "internal_port=80" \
+                    -e "docker_image=muyleangin/reactjs:latest" \
                     
-        //             '''
-        //             // -e "domain_name=jina.sen-pai.live" \
-        //         }
-        //     }
-        // }
+                    '''
+                    // -e "domain_name=jina.sen-pai.live" \
+                }
+            }
+        }
 
     }
 }
