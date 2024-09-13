@@ -22,15 +22,15 @@ pipeline {
                 git branch: 'main', url: 'https://github.com/SattyaPiseth/devops-engineering.git'
             }
         }
-        // stage('check location pwd'){
-        //     steps{
-        //         sh'''
-        //         ls -lrt
-        //         pwd
-        //         ls /var/jenkins_home/workspace/ansible/test-ansible/shellscript/*
-        //         '''
-        //     }
-        // }
+        stage('check location pwd'){
+            steps{
+                sh'''
+                ls -lrt
+                pwd
+                ls /var/jenkins_home/workspace/ansible/test-ansible/shellscript/*
+                '''
+            }
+        }
         stage('Check ansible vers') {
             steps {
                 script {
@@ -51,18 +51,42 @@ pipeline {
         //         }
         //     }
         // }
-        stage('Install Docker') {
+
+        stage('Check for Docker') {
             steps {
                 script {
-                    echo 'Running Ansible playbook to ensure Docker is installed...'
-                    sh '''
-                        # Run the Ansible playbook
+                    def dockerInstalled = sh(
+                        script: "docker --version",
+                        returnStatus: true
+                    )
 
-                        ansible-playbook -i ansible/hosts.ini ansible/install_docker.yml
-                    '''
+                    if (dockerInstalled == 0) {
+                        echo 'Docker is already installed on this node. Skipping Docker installation.'
+                        currentBuild.result = 'SUCCESS'
+                    } else {
+                        echo 'Docker is not installed. Proceeding to installation...'
+                    }
                 }
             }
         }
+
+         stage('Install Docker') {
+            when {
+                expression {
+                    // Skip this stage if Docker is installed
+                    return sh(script: "docker --version", returnStatus: true) != 0
+                }
+            }
+            steps {
+                script {
+                    echo 'Running Ansible playbook to install Docker...'
+                    sh """
+                        ansible-playbook -i ${ANSIBLE_HOSTS} ${ANSIBLE_PLAYBOOK}
+                    """
+                }
+            }
+        }
+    
 
 
         //  stage('Deploy with Ansible') {
@@ -80,6 +104,10 @@ pipeline {
         //         }
         //     }
         // }
-
+    }
+    post {
+        always {
+            echo 'Pipeline execution completed.'
+        }
     }
 }

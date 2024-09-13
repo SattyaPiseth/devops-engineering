@@ -3,37 +3,48 @@
   hosts: all
   become: true
   tasks:
+    - name: Check if Docker is installed
+      ansible.builtin.command: "docker --version"
+      register: docker_installed
+      ignore_errors: true
+
     - name: Remove conflicting Docker repository file (if it exists)
       ansible.builtin.file:
         path: /etc/apt/sources.list.d/download_docker_com_linux_ubuntu.list
         state: absent
+      when: docker_installed.rc != 0
 
     - name: Ensure Docker GPG key is installed
       ansible.builtin.apt_key:
         url: https://download.docker.com/linux/ubuntu/gpg
         state: present
         keyring: /usr/share/keyrings/docker-archive-keyring.gpg
+      when: docker_installed.rc != 0
 
     - name: Set up Docker repository
       ansible.builtin.apt_repository:
         repo: "deb [arch=amd64 signed-by=/usr/share/keyrings/docker-archive-keyring.gpg] https://download.docker.com/linux/ubuntu {{ ansible_distribution_release }} stable"
         filename: docker
         state: present
+      when: docker_installed.rc != 0
 
     - name: Clean up apt cache
       ansible.builtin.apt:
         autoclean: yes
+      when: docker_installed.rc != 0
 
     - name: Update apt package list
       ansible.builtin.apt:
         update_cache: yes
         cache_valid_time: 3600
+      when: docker_installed.rc != 0
 
     - name: Install Docker
       ansible.builtin.apt:
         name: docker-ce
         state: present
         update_cache: yes
+      when: docker_installed.rc != 0
 
     - name: Ensure Docker service is running
       systemd:
