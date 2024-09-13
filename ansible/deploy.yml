@@ -61,6 +61,16 @@
       notify:
         - Reload Nginx
 
+    - name: Ensure Certbot directories are present and writable
+      file:
+        path: "{{ item }}"
+        state: directory
+        mode: '0755'
+      loop:
+        - /etc/letsencrypt
+        - /var/log/letsencrypt
+      become: true
+
     - name: Obtain SSL certificate with Certbot
       command: >
         certbot --nginx -d {{ domain_name }} --non-interactive --agree-tos
