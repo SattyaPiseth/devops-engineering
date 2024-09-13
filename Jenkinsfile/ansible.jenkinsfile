@@ -41,6 +41,17 @@ pipeline {
                 }
             }
         }
+
+        stage('Check Docker Installation') {
+            steps {
+                script {
+                    def dockerInstalled = sh(script: 'which docker', returnStatus: true) == 0
+                     // Print the result
+                    echo "Docker installed: ${dockerInstalled}"
+                    
+                }
+            }
+        }
         stage('deploy with docker on remote server'){
             steps{
                 script{
