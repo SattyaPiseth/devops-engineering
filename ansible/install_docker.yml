@@ -54,17 +54,23 @@
         groups: docker
         append: yes
 
-    - name: Apply new group membership
-      command: newgrp docker
-      ignore_errors: yes
+    - name: Ensure Docker socket permissions are correct
+      file:
+        path: /var/run/docker.sock
+        owner: root
+        group: docker
+        mode: '0660'
+        state: file
+
+    - name: Notify user to log out and log back in
+      debug:
+        msg: "Please log out and log back in to apply group membership changes."
 
     - name: Verify Docker installation
-      when: docker_version.failed
       command: docker --version
       register: docker_installed
       changed_when: false
 
     - name: Output Docker version
-      when: docker_version.failed
       debug:
         msg: "Docker installed: {{ docker_installed.stdout }}"
