@@ -15,14 +15,13 @@
       register: existing_container
       changed_when: false
 
-    - name: Stop existing container if it is running
+    - name: Stop the existing container if it is running
       when: existing_container.stdout != ""
       command: docker stop "{{ existing_container.stdout }}"
       ignore_errors: yes
 
-    - name: Remove existing container if it exists
-      when: existing_container.stdout != ""
-      command: docker rm "{{ existing_container.stdout }}"
+    - name: Remove the existing container if it exists
+      command: docker rm -f "{{ container_name }}"
       ignore_errors: yes
 
     - name: Deploy new container
