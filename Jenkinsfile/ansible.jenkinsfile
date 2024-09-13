@@ -12,7 +12,8 @@ pipeline {
                 git branch: 'main', url: 'https://github.com/SattyaPiseth/devops-engineering.git'
             }
         }
-        steps {
+        stage('testing'){
+            steps {
                 // Set Ansible configurations via environment variables
                 withEnv(["ANSIBLE_HOST_KEY_CHECKING=False", "ANSIBLE_TIMEOUT=60"]) {
                     sh '''
@@ -20,6 +21,7 @@ pipeline {
                     '''
                 }
             }
+        }
         // stage('ansible create folder') {
         //     steps {
         //         script {
