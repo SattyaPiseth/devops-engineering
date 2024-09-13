@@ -70,22 +70,22 @@ pipeline {
             }
         }
 
-        stage('Install Docker') {
-            when {
-                expression {
-                    // Skip this stage if Docker is installed
-                    return sh(script: "docker --version", returnStatus: true) != 0
-                }
-            }
-            steps {
-                script {
-                    echo 'Running Ansible playbook to install Docker...'
-                    sh """
-                        ansible-playbook -i ${ANSIBLE_HOSTS} ${ANSIBLE_PLAYBOOK}
-                    """
-                }
-            }
-        }
+        // stage('Install Docker') {
+        //     when {
+        //         expression {
+        //             // Skip this stage if Docker is installed
+        //             return sh(script: "docker --version", returnStatus: true) != 0
+        //         }
+        //     }
+        //     steps {
+        //         script {
+        //             echo 'Running Ansible playbook to install Docker...'
+        //             sh """
+        //                 ansible-playbook -i ${ANSIBLE_HOSTS} ${ANSIBLE_PLAYBOOK}
+        //             """
+        //         }
+        //     }
+        // }
 
         stage('Uninstall Docker') {
             steps {
