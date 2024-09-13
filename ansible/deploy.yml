@@ -88,8 +88,8 @@
   #     notify:
   #       - Reload Nginx
 
-  # handlers:
-  #   - name: Reload Nginx
-  #     service:
-  #       name: nginx
-  #       state: reloaded
+  handlers:
+    - name: Reload Nginx
+      service:
+        name: nginx
+        state: reloaded
