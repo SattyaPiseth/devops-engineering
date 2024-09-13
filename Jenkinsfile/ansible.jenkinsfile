@@ -52,20 +52,20 @@ pipeline {
                 }
             }
         }
-        stage('deploy with docker on remote server'){
-            steps{
-                script{
-                    sh'''
-                    ansible-playbook -i ansible/hosts.ini ansible/deploy.yml \
-                    -e "external_port=3233" \
-                    -e "internal_port=80" \
-                    -e "docker_image=muyleangin/reactjs:latest" \
+        // stage('deploy with docker on remote server'){
+        //     steps{
+        //         script{
+        //             sh'''
+        //             ansible-playbook -i ansible/hosts.ini ansible/deploy.yml \
+        //             -e "external_port=3233" \
+        //             -e "internal_port=80" \
+        //             -e "docker_image=muyleangin/reactjs:latest" \
                     
-                    '''
-                    // -e "domain_name=jina.sen-pai.live" \
-                }
-            }
-        }
+        //             '''
+        //             // -e "domain_name=jina.sen-pai.live" \
+        //         }
+        //     }
+        // }
 
     }
 }
