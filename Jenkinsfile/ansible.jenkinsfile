@@ -45,7 +45,7 @@ pipeline {
             steps{
                 script{
                     sh'''
-                    ansible-playbook -i ansible/hosts ansible/deploy.yml \
+                    ansible-playbook -i ansible/hosts.ini ansible/deploy.yml \
                     -e "external_port=3233" \
                     -e "internal_port=80" \
                     -e "docker_image=muyleangin/reactjs:latest" \
