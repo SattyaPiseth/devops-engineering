@@ -36,8 +36,8 @@
         name: docker
         state: absent
 
-    - name: Remove Docker user permissions (if necessary)
-      user:
-        name: "{{ ansible_user }}"
-        groups: docker
-        append: no
+    # - name: Remove Docker user permissions (if necessary)
+    #   user:
+    #     name: "{{ ansible_user }}"
+    #     groups: docker
+    #     append: no
