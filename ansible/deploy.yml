@@ -1,3 +1,4 @@
+---
 - name: Deploy Docker container and manage Nginx with SSL
   hosts: node2
   become: true
@@ -7,11 +8,13 @@
     docker_image: "{{ docker_image }}"
     container_name: "{{ container_name }}"
     domain_name: "{{ domain_name }}"
-    app_port: "{{ external_port }}"
+    email: "pisethsattya33@email.com"  # Certbot email
+    nginx_conf_path: "/etc/nginx/sites-available/{{ domain_name }}"
+    ssl_cert_path: "/etc/letsencrypt/live/{{ domain_name }}/fullchain.pem"
 
   tasks:
     - name: Check if the container is running
-      command: docker ps -q -f name={{ container_name }}
+      shell: docker ps -q -f name={{ container_name }}
       register: container_id
       changed_when: false
 
@@ -21,45 +24,53 @@
         state: absent
       when: container_id.stdout != ""
 
-    - name: Deploy with docker
+    - name: Deploy Docker container
       docker_container:
         name: "{{ container_name }}"
         image: "{{ docker_image }}"
         state: started
         published_ports:
           - "{{ external_port }}:{{ internal_port }}"
+        restart_policy: always
 
     - name: Install Nginx
       apt:
         name: nginx
         state: present
+        update_cache: yes
 
-    - name: Setup Nginx Server Block
-      template:
-        src: nginx_domain.conf.j2
-        dest: "/etc/nginx/sites-available/{{ domain_name }}"
-
-    - name: Enable Nginx configuration
-      file:
-        src: "/etc/nginx/sites-available/{{ domain_name }}"
-        dest: "/etc/nginx/sites-enabled/{{ domain_name }}"
-        state: link
-
-    - name: Reload Nginx to apply changes
+    - name: Ensure Nginx service is running
       service:
         name: nginx
-        state: reloaded
+        state: started
+        enabled: true
 
-    - name: Obtain and Install SSL Certificate with Certbot
-      command: sudo certbot --nginx -d {{ domain_name }} --non-interactive --agree-tos -m pisethsattya33@email.com --redirect
+    - name: Set up Nginx server block
+      template:
+        src: nginx_domain.conf.j2
+        dest: "{{ nginx_conf_path }}"
+      notify: 
+        - Reload Nginx
+
+    - name: Enable Nginx site
+      file:
+        src: "{{ nginx_conf_path }}"
+        dest: "/etc/nginx/sites-enabled/{{ domain_name }}"
+        state: link
+      notify:
+        - Reload Nginx
+
+    - name: Obtain SSL certificate with Certbot
+      command: >
+        certbot --nginx -d {{ domain_name }} --non-interactive --agree-tos
+        -m {{ email }} --redirect
       args:
-        creates: /etc/letsencrypt/live/{{ domain_name }}/fullchain.pem
-      register: certbot_result
+        creates: "{{ ssl_cert_path }}"
       notify:
         - Reload Nginx
 
   handlers:
-      - name: Reload Nginx
-        service:
-          name: nginx
-          state: reloaded
+    - name: Reload Nginx
+      service:
+        name: nginx
+        state: reloaded
