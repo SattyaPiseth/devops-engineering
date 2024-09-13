@@ -34,33 +34,33 @@
         name: nginx
         state: present
 
-    - name: Setup Nginx Server Block
-      template:
-        src: nginx_domain.conf.j2
-        dest: "/etc/nginx/sites-available/{{ domain_name }}"
+    # - name: Setup Nginx Server Block
+    #   template:
+    #     src: nginx_domain.conf.j2
+    #     dest: "/etc/nginx/sites-available/{{ domain_name }}"
 
-    - name: Enable Nginx configuration
-      file:
-        src: "/etc/nginx/sites-available/{{ domain_name }}"
-        dest: "/etc/nginx/sites-enabled/{{ domain_name }}"
-        state: link
+    # - name: Enable Nginx configuration
+    #   file:
+    #     src: "/etc/nginx/sites-available/{{ domain_name }}"
+    #     dest: "/etc/nginx/sites-enabled/{{ domain_name }}"
+    #     state: link
 
-    - name: Reload Nginx to apply changes
-      service:
-        name: nginx
-        state: reloaded
-      notify:
-        - Reload Nginx
+    # - name: Reload Nginx to apply changes
+    #   service:
+    #     name: nginx
+    #     state: reloaded
+    #   notify:
+    #     - Reload Nginx
 
-    - name: Obtain and Install SSL Certificate with Certbot
-      command: certbot --nginx -d {{ domain_name }} --non-interactive --agree-tos -m your@email.com --redirect
-      args:
-        creates: /etc/letsencrypt/live/{{ domain_name }}/fullchain.pem
-      register: certbot_result
-      ignore_errors: yes
-      failed_when: certbot_result.rc not in [0, 1]
-      notify:
-        - Reload Nginx
+    # - name: Obtain and Install SSL Certificate with Certbot
+    #   command: certbot --nginx -d {{ domain_name }} --non-interactive --agree-tos -m your@email.com --redirect
+    #   args:
+    #     creates: /etc/letsencrypt/live/{{ domain_name }}/fullchain.pem
+    #   register: certbot_result
+    #   ignore_errors: yes
+    #   failed_when: certbot_result.rc not in [0, 1]
+    #   notify:
+    #     - Reload Nginx
 
   handlers:
     - name: Reload Nginx
