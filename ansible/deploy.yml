@@ -1,6 +1,6 @@
 ---
 - name: Deploy Docker container and manage Nginx with SSL
-  hosts: node2
+  hosts: node1
   become: true
   vars:
     external_port: "{{ external_port }}"
