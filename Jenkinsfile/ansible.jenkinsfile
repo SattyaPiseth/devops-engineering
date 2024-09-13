@@ -35,7 +35,7 @@ pipeline {
             steps {
                 script {
                     sh '''
-                    ansible-playbook -i ansible/hosts.ini ansible/create-folder.yml -K
+                    ansible-playbook -i ansible/hosts.ini ansible/create-folder.yml
                     '''
                 }
             }
