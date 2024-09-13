@@ -1,7 +1,10 @@
 ---
 - name: Ensure Docker is installed on Ubuntu 22.04 LTS
-  hosts: workers
+  hosts: all
   become: yes
+  vars:
+    docker_repo: "deb [arch=amd64] https://download.docker.com/linux/ubuntu {{ ansible_lsb.codename }} stable"
+
   tasks:
     - name: Check if Docker is installed
       command: docker --version
@@ -29,7 +32,7 @@
     - name: Add Docker repository
       when: docker_version.failed
       apt_repository:
-        repo: "deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable"
+        repo: "{{ docker_repo }}"
         state: present
 
     - name: Install Docker Engine
