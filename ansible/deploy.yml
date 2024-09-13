@@ -6,7 +6,7 @@
     external_port: "{{ external_port }}"
     internal_port: "{{ internal_port }}"
     docker_image: "{{ docker_image }}"
-    container_name: "{{ container_name | default('my_container') }}"
+    container_name: "{{ container_name }}"
     domain_name: "{{ domain_name }}"
     app_port: "{{ external_port }}"
   tasks:
