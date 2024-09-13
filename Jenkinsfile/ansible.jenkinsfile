@@ -12,23 +12,23 @@ pipeline {
                 git branch: 'main', url: 'https://github.com/SattyaPiseth/devops-engineering.git'
             }
         }
-        stage('Check ansible vers') {
+        stage('check location pwd'){
+            steps{
+                sh'''
+                ls -lrt
+                pwd
+                ls /var/jenkins_home/workspace/ansible/test-ansible/shellscript/*
+                '''
+            }
+        }
+        stage('ansible create folder') {
             steps {
                 script {
-                    sh '''ansible --version
-                    ansible -i ./ansible/hosts.ini all -m ping
+                    sh '''
+                    ansible-playbook -i ansible/hosts.ini ansible/create-folder.yml -K
                     '''
                 }
             }
         }
-        // stage('ansible create folder') {
-        //     steps {
-        //         script {
-        //             sh '''
-        //             ansible-playbook -i ansible/hosts.ini ansible/create-folder.yml -K
-        //             '''
-        //         }
-        //     }
-        // }
     }
 }
