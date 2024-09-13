@@ -51,8 +51,12 @@
         state: reloaded
 
     - name: Obtain and Install SSL Certificate with Certbot
-      command: sudo certbot --nginx -d {{ domain_name }} --non-interactive --agree-tos -m pisethsattya33@email.com --redirect
+      command: certbot --nginx -d {{ domain_name }} --non-interactive --agree-tos -m your@email.com --redirect
       args:
         creates: /etc/letsencrypt/live/{{ domain_name }}/fullchain.pem
+      register: certbot_result
+      ignore_errors: yes
+      failed_when: certbot_result.rc not in [0, 1]
       notify:
         - Reload Nginx
+
