@@ -12,15 +12,14 @@ pipeline {
                 git branch: 'main', url: 'https://github.com/SattyaPiseth/devops-engineering.git'
             }
         }
-        stage('Check ansible vers') {
-            steps {
-                script {
-                    sh '''ansible --version
-                    ansible -i ./ansible/hosts.ini all -m ping
+        steps {
+                // Set Ansible configurations via environment variables
+                withEnv(["ANSIBLE_HOST_KEY_CHECKING=False", "ANSIBLE_TIMEOUT=60"]) {
+                    sh '''
+                    ansible -i hosts node2 -m ping --timeout=${ANSIBLE_TIMEOUT} --private-key=/root/.ssh/id_rsa
                     '''
                 }
             }
-        }
         // stage('ansible create folder') {
         //     steps {
         //         script {
