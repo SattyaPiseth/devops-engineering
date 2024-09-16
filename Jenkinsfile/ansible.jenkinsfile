@@ -1,7 +1,7 @@
 pipeline {
     agent any
     environment {
-        EXTERNAL_PORT = '8085'
+        EXTERNAL_PORT = '9000'
         INTERNAL_PORT = '80'
         DOCKER_IMAGE = 'pisethsattya/jobquick-jenkins:1.0'
         CONTAINER_NAME = 'jobfinder'
@@ -72,21 +72,21 @@ pipeline {
             }
         }
 
-        // stage('Deploy with Ansible') {
-        //     steps {
-        //         script {
-        //             // Run the Ansible playbook to deploy the Docker container
-        //             sh """
-        //             ansible-playbook -i ${ANSIBLE_HOSTS} ${ANSIBLE_PLAYBOOK} \
-        //             -e "external_port=${EXTERNAL_PORT}" \
-        //             -e "internal_port=${INTERNAL_PORT}" \
-        //             -e "docker_image=${DOCKER_IMAGE}" \
-        //             -e "container_name=${CONTAINER_NAME}" \
-        //             -e "domain_name=${DOMAIN_NAME}"
-        //             """
-        //         }
-        //     }
-        // }
+        stage('Deploy with Ansible') {
+            steps {
+                script {
+                    // Run the Ansible playbook to deploy the Docker container
+                    sh """
+                    ansible-playbook -i ${ANSIBLE_HOSTS} ${ANSIBLE_PLAYBOOK} \
+                    -e "external_port=${EXTERNAL_PORT}" \
+                    -e "internal_port=${INTERNAL_PORT}" \
+                    -e "docker_image=${DOCKER_IMAGE}" \
+                    -e "container_name=${CONTAINER_NAME}" \
+                    -e "domain_name=${DOMAIN_NAME}"
+                    """
+                }
+            }
+        }
     }
 
     post {
