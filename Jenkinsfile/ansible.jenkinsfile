@@ -31,16 +31,16 @@ pipeline {
                 '''
             }
         }
-        // stage('Check ansible vers') {
-        //     steps {
-        //         script {
-        //             sh '''ansible --version
-        //             cd ~
-        //             ansible -i ansible/hosts all -m ping
-        //             '''    
-        //         }
-        //     }
-        // }
+        stage('Check ansible vers') {
+            steps {
+                script {
+                    sh '''ansible --version
+                    
+                    ansible -i ansible/hosts.ini all -m ping
+                    '''    
+                }
+            }
+        }
 
         // stage('ansible create folder') {
         //     steps {
