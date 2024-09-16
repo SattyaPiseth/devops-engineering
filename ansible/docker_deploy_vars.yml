@@ -1,6 +1,6 @@
 ---
 - name: Deploy Docker container with variables
-  hosts: node3
+  hosts: all
   become: true
   vars:
     docker_image: "{{ docker_image }}" # Ensure this variable is passed or defined elsewhere
