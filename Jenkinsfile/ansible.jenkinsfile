@@ -52,31 +52,31 @@ pipeline {
         //     }
         // }
 
-        stage('Check for Docker') {
-            steps {
-                script {
-                    def dockerInstalled = sh(
-                        script: "docker --version",
-                        returnStatus: true
-                    )
+        // stage('Check for Docker') {
+        //     steps {
+        //         script {
+        //             def dockerInstalled = sh(
+        //                 script: "docker --version",
+        //                 returnStatus: true
+        //             )
 
-                    if (dockerInstalled == 0) {
-                        echo 'Docker is already installed on this node. Skipping Docker installation.'
-                        currentBuild.result = 'SUCCESS'
-                    } else {
-                        echo 'Docker is not installed. Proceeding to installation...'
-                    }
-                }
-            }
-        }
+        //             if (dockerInstalled == 0) {
+        //                 echo 'Docker is already installed on this node. Skipping Docker installation.'
+        //                 currentBuild.result = 'SUCCESS'
+        //             } else {
+        //                 echo 'Docker is not installed. Proceeding to installation...'
+        //             }
+        //         }
+        //     }
+        // }
 
         stage('Install Docker') {
-            when {
-                expression {
-                    // Skip this stage if Docker is installed
-                    return sh(script: "docker --version", returnStatus: true) != 0
-                }
-            }
+            // when {
+            //     expression {
+            //         // Skip this stage if Docker is installed
+            //         return sh(script: "docker --version", returnStatus: true) != 0
+            //     }
+            // }
             steps {
                 script {
                     echo 'Running Ansible playbook to install Docker...'
