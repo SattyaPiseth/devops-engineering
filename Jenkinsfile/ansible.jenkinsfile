@@ -32,28 +32,46 @@ pipeline {
                 }
             }
         }
-        
-        stage('Check and Install Docker if Missing') {
+
+        stage('Check Docker Installation') {
             steps {
                 script {
-                    def dockerCheck = sh (
+                    echo "Checking if Docker is installed on all hosts"
+                    def dockerInstalled = sh(
                         script: '''
-                            ansible -i ${ANSIBLE_HOSTS} all -m shell -a "docker --version" | grep -q "not found" && echo "Docker Missing" || echo "Docker Found"
+                            ansible -i ${ANSIBLE_HOSTS} all -m shell -a "docker --version" \
+                            | grep -q "Docker version" && echo "Docker found" || echo "Docker missing"
                         ''',
-                        returnStatus: true
-                    )
-                    if (dockerCheck == 0) {
-                        echo 'Docker is missing on one or more hosts. Running installation...'
-                        sh '''
-                            ansible-playbook -i ${ANSIBLE_HOSTS} ansible/install_docker.yml
-                        '''
+                        returnStdout: true
+                    ).trim()
+
+                    if (dockerInstalled.contains("Docker missing")) {
+                        echo "Docker is missing on some hosts. Proceeding to Docker installation."
+                        env.DOCKER_REQUIRED = "true"
                     } else {
-                        echo 'Docker is already installed on all hosts. Skipping installation.'
+                        echo "Docker is already installed on all hosts."
+                        env.DOCKER_REQUIRED = "false"
                     }
                 }
             }
         }
-        
+
+        stage('Install Docker') {
+            when {
+                expression {
+                    return env.DOCKER_REQUIRED == "true"
+                }
+            }
+            steps {
+                script {
+                    echo "Installing Docker using Ansible..."
+                    sh '''
+                        ansible-playbook -i ${ANSIBLE_HOSTS} ansible/install_docker.yml
+                    '''
+                }
+            }
+        }
+
         // stage('Deploy with Ansible') {
         //     steps {
         //         script {
@@ -70,6 +88,7 @@ pipeline {
         //     }
         // }
     }
+
     post {
         always {
             echo 'Pipeline execution completed.'
